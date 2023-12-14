@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import Nav from "../components/Nav";
 import Form from "../components/Form";
 import Post from "../components/Post";
+import axios from "axios";
 
 const Layout = ({ children }) => {
   const [isLoginVisible, setLoginVisible] = useState(false);
@@ -50,20 +51,31 @@ const Layout = ({ children }) => {
     setLoggedUser(storedUser);
   };
 
+  // const getWallPosts = async () => {
+  //   try {
+  //     const response = await fetch(
+  //       `${process.env.NEXT_PUBLIC_API_NAME}/wallposts`,
+  //       {
+  //         method: "GET",
+  //       }
+  //     );
+
+  //     const data = await response.json();
+  //     if (response.ok) {
+  //       setFeed(data.wallposts);
+  //     } else {
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   }
+  // };
+
   const getWallPosts = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_NAME}/wallposts`,
-        {
-          method: "GET",
-        }
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_NAME}/wallposts`
       );
-
-      const data = await response.json();
-      if (response.ok) {
-        setFeed(data.wallposts);
-      } else {
-      }
+      setFeed(response.data.wallposts);
     } catch (error) {
       console.error(error);
     }
