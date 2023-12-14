@@ -17,16 +17,19 @@ const Layout = ({ children }) => {
   const postOnWall = async () => {
     console.log(postText);
     try {
-      const response = await fetch(`http://localhost:8000/api/wallposts`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: postText,
-          userId: looggedUser.id,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_NAME}/wallposts`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            message: postText,
+            userId: looggedUser.id,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -49,9 +52,12 @@ const Layout = ({ children }) => {
 
   const getWallPosts = async () => {
     try {
-      const response = await fetch(`http://localhost:8000/api/wallposts`, {
-        method: "GET",
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_NAME}/wallposts`,
+        {
+          method: "GET",
+        }
+      );
 
       const data = await response.json();
       if (response.ok) {

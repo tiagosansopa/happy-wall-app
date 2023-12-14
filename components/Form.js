@@ -28,17 +28,20 @@ const Form = ({ updateUser }) => {
     try {
       // Use the appropriate API endpoint based on the mode (create user or log in)
       const endpoint = isCreateUser ? "users/register" : "users/login";
-      const response = await fetch(`http://localhost:8000/api/${endpoint}`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email,
-          password,
-          name: isCreateUser ? name : undefined,
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_NAME}/${endpoint}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            password,
+            name: isCreateUser ? name : undefined,
+          }),
+        }
+      );
 
       const data = await response.json();
 
