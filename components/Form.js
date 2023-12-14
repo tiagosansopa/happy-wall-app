@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-const Form = ({ updateUser }) => {
+const Form = ({ updateUser, setLoginVisible }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [name, setName] = useState("");
@@ -48,6 +48,10 @@ const Form = ({ updateUser }) => {
       if (response.ok) {
         localStorage.setItem("user", JSON.stringify(data.user));
         updateUser(data.user);
+        setPassword("");
+        setEmail("");
+        setName("");
+        setLoginVisible(false);
       } else {
         setErrorMessage(data.message || "Something went wrong.");
       }
@@ -58,12 +62,16 @@ const Form = ({ updateUser }) => {
   };
 
   return (
-    <div className="bg-white p-4 border rounded">
+    <div className="bg-white p-6 border rounded max-w-md mx-auto">
       <form onSubmit={handleSubmit}>
+        <h3 className="text-lg font-semibold mb-4">
+          {isCreateUser ? "Create User" : "Log In"}
+        </h3>
         {isCreateUser && (
-          <div>
-            <label>Name</label>
+          <div className="mb-4">
+            <label className="block text-sm font-bold mb-2">Name</label>
             <input
+              className="border rounded w-full py-2 px-3"
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
@@ -71,34 +79,43 @@ const Form = ({ updateUser }) => {
           </div>
         )}
 
-        <label>Email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <div className="mb-4">
+          <label className="block text-sm font-bold mb-2">Email</label>
+          <input
+            className="border rounded w-full py-2 px-3"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </div>
 
-        <label>Password</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <p className="text-red-500">{errorMessage}</p>
-
-        <button className="bg-blue-500 text-white px-4 py-2 mt-2" type="submit">
-          {isCreateUser ? "Create User" : "Log in"}
-        </button>
+        <div className="mb-4">
+          <label className="block text-sm font-bold mb-2">Password</label>
+          <input
+            className="border rounded w-full py-2 px-3"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+        </div>
 
         <button
-          className="text-blue-500 mt-2 ml-2"
-          type="button"
-          onClick={() => setIsCreateUser(!isCreateUser)}
+          className="bg-blue-500 text-white px-6 py-2 ml-4 rounded-lg"
+          type="submit"
         >
-          {isCreateUser ? "Switch to Log in" : "Switch to Create User"}
+          {isCreateUser ? "Create User" : "Log in"}
         </button>
       </form>
+      <p className="text-red-500 mb-4">{errorMessage}</p>
+      <button
+        className="text-blue-500"
+        type="button"
+        onClick={() => setIsCreateUser(!isCreateUser)}
+      >
+        {isCreateUser
+          ? "Already registered? Sign in!"
+          : "New? Create user now!"}
+      </button>
     </div>
   );
 };

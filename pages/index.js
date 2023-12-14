@@ -81,6 +81,27 @@ const Layout = ({ children }) => {
     }
   };
 
+  const formStyles = {
+    transform: isLoginVisible
+      ? "translate(-50%, -50%) scale(1)"
+      : "translate(-50%, -50%) scale(0)",
+    transition: "transform 0.3s ease",
+    width: "50vw",
+    height: "50vh",
+    position: "fixed",
+    top: "50%",
+    left: "50%",
+    zIndex: 999,
+    backgroundColor: "black",
+    borderRadius: "8px",
+    padding: "16px",
+    textAlign: "center",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
+    justifyContent: "center",
+  };
+
   useEffect(() => {
     getWallPosts();
 
@@ -95,52 +116,63 @@ const Layout = ({ children }) => {
 
   return (
     <div className="flex h-screen flex-col flex-grow">
-      <Nav user={looggedUser} />
-      {!looggedUser && (
-        <div className="w-1/4 bg-gray-200 p-4 overflow-y-auto">
-          <button
-            className="bg-blue-500 text-white px-4 py-2 mb-4"
-            onClick={toggleSide}
-          >
-            Login
-          </button>
+      <Nav user={looggedUser} updateUser={updateUser} />
 
-          {isLoginVisible && <Form updateUser={updateUser} />}
-        </div>
-      )}
-      <div className="w-3/4 p-4">
+      <div className="w-1/4 bg-gray-200 p-4 overflow-y-auto" style={formStyles}>
+        <button
+          className="bg-black text-white px-4 py-2 mb-4"
+          onClick={toggleSide}
+          style={{
+            position: "absolute",
+            top: "8px",
+            right: "8px",
+            cursor: "pointer",
+          }}
+        >
+          X
+        </button>
+        <Form updateUser={updateUser} setLoginVisible={setLoginVisible} />
+      </div>
+
+      <div className="w-3/4 p-4 mx-auto max-h-screen overflow-y-auto  flex flex-col-reverse">
         <div className="mb-4">
           {feed.map((post) => (
             <Post
+              key={post.id}
               user={post.creator.name}
               message={post.message}
               date={post.createdAt}
             />
           ))}
         </div>
-
-        <div className="flex">
-          {looggedUser ? (
-            <>
-              <textarea
-                className="w-3/4 p-2 mr-2 border"
-                placeholder="Write your thoughts..."
-                value={postText}
-                onChange={(e) => setPostText(e.target.value)}
-              />
-              <button
-                className="bg-blue-500 text-white px-4 py-2"
-                onClick={() => postOnWall()}
-              >
-                Publish
-              </button>
-            </>
-          ) : (
-            <div>
-              <p>Register to post on the happy wall!</p>
-            </div>
-          )}
-        </div>
+      </div>
+      <div className=" bg-black text-white p-4 flex items-center justify-center">
+        {looggedUser ? (
+          <>
+            <textarea
+              className="w-3/4 p-2 mr-2 border text-black"
+              placeholder="Write your happy thoughts..."
+              value={postText}
+              onChange={(e) => setPostText(e.target.value)}
+            />
+            <button
+              className="bg-blue-500 text-white px-4 py-2"
+              onClick={() => postOnWall()}
+            >
+              Publish
+            </button>
+          </>
+        ) : (
+          <div>
+            <p>Register to post on the happy wall!</p>
+            <button
+              className="bg-blue-500 text-white px-4 py-2 mb-4"
+              onClick={toggleSide}
+            >
+              Login
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
